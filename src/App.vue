@@ -12,6 +12,7 @@ v-app(
   Snackbar
   v-main
     router-view
+    
 </template>
 
 <script lang="ts">

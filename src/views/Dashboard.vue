@@ -4,15 +4,11 @@
   v-layout()
     v-flex(xs1, md2)
     v-flex(xs10, md8)
-      span._headline.pt-4 Сервис по анализу облика компании в обществе.
-      .v-container
-        p.mt-12 Для того, чтобы открыть результаты анализа, введите ссылку на сообщество вконтакте
-        v-layout(wrap v-on:keyup.enter="sendCompanyLink()").mt-12
-          v-text-field(label="Ссылка", :color="color", placeholder="vk.com/...", v-model="link", :loading="loading")
-          v-btn(large outlined width="100" @click="sendCompanyLink()" :loading="loading" :error="btn_icon === 'mdi-close'")
-            v-icon(:color="color") {{ btn_icon }}
-        p {{ link }}
-        p {{ $store.state.api_base }}
+      span._headline.pt-4 Дэшборд
+      v-layout(v-if="typeof $store.state.AppStore.group_id !== 'undefined'")
+        span yeah
+      v-layout(v-else) 
+        span Что-то пошло не так. Попробуйте начать сначала. 
     v-flex(xs1, md2)
 
 </template>
@@ -32,8 +28,6 @@ const SnackbarStore = namespace('SnackbarStore')
 export default class Home extends Vue {
   @AppStore.Mutation setUser!: (user: User) => void
   @SnackbarStore.Mutation setSnackbarError!: (error: string) => void
-  @SnackbarStore.Mutation setGroupId!: (id: string) => void
-
   link: string = "";
   loading: boolean = false;
   btn_icon: string = "mdi-arrow-right";
@@ -41,11 +35,10 @@ export default class Home extends Vue {
 
   async sendCompanyLink() {
     this.loading = true;
-    create(this.link).then(data => {
+    create(this.link).then(() => {
       this.loading = false;
       this.color = "green";
       this.btn_icon = "mdi-done";
-      this.setGroupId(data.id);
     })
     .catch(e => {
       console.log(e);

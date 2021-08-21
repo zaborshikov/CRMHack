@@ -26,7 +26,7 @@ nav
           v-icon settings
       .v-container
         v-text-field(v-model="api_base").mt-12
-        v-btn(icon @click="close_overlay = true")
+        v-btn(icon @click="changeApiBase(); close_overlay = true")
           v-icon save 
 </template>
 
@@ -45,6 +45,7 @@ export default class Navbar extends Vue {
 
   @AppStore.Mutation setDark!: (dark: boolean) => void
   @AppStore.Mutation setLanguage!: (language: string) => void
+  @AppStore.Mutation setApiBase!: (api_base: string) => void
 
   api_base: string = "https://";
   close_overlay: boolean = false;
@@ -71,6 +72,9 @@ export default class Navbar extends Vue {
     i18n.locale = locale
     this.setLanguage(locale)
     document.title = i18n.t('strippedTitle') as string
+  }
+  changeApiBase() {
+    this.setApiBase(this.api_base);
   }
 }
 </script>
