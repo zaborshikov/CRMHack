@@ -45,10 +45,10 @@ def main():
     # comments = [word if word != "🤷" else 'Не знаю...' for word in commentsEmoji]
     # comments = [word if word != "🤞" else 'Будем надеяться' for word in commentsEmoji]
     # comments = [word if word != "🔥" else 'Супер!' for word in commentsEmoji]
-
+    print(commentsEmoji)
     # print(comments)    
     for i in commentsEmoji:
-        return(ai.analyze([i]))
+        print(ai.analyze([i]))
     # print(ai.analyze(comments))
     # return(comments, posts)
     # return(comments, posts)
