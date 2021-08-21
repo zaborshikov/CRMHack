@@ -1,6 +1,7 @@
 from logging import error
 import vk_api
 import creds
+import analyze
 def auth_handler():
     #2-factor verification
     key = input('Enter authentication code: ')
