@@ -13,6 +13,9 @@ import Vuetify, {
   VFlex,
   VLayout,
   VSnackbar,
+  VTextField,
+  VTextarea,
+  VInput,
   VMain,
 } from 'vuetify/lib'
 import 'vuetify/dist/vuetify.min.css'
@@ -32,6 +35,9 @@ Vue.use(Vuetify, {
     VFlex,
     VLayout,
     VSnackbar,
+    VTextField,
+    VTextarea,
+    VInput,
     VMain,
   },
 })

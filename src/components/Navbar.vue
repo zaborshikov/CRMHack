@@ -1,9 +1,10 @@
 <template lang="pug">
 nav
-  v-app-bar(flat, app)
+  v-app-bar(flat, app, dark)
     // Title
     v-toolbar-title.text-uppercase.grey--text
-      span {{ $t("title") }}
+      router-link(to='/')
+        img(src="../assets/logo.png" v-on:click="" style="height: 55px; margin-top: 5px")
     v-spacer
     // Dark mode
     v-btn(text, icon, color='grey', @click='toggleMode')
@@ -19,6 +20,14 @@ nav
           :key='locale.code'
         )
           v-list-item-title {{ locale.icon }}
+    v-menu(:close-on-content-click="close_overlay")
+      template(v-slot:activator="{on, attrs}")
+        v-btn(color='grey' icon, v-bind="attrs", v-on="on" @click="close_overlay = false")
+          v-icon settings
+      .v-container
+        v-text-field(v-model="api_base").mt-12
+        v-btn(icon @click="close_overlay = true")
+          v-icon save 
 </template>
 
 <script lang="ts">
@@ -36,6 +45,9 @@ export default class Navbar extends Vue {
 
   @AppStore.Mutation setDark!: (dark: boolean) => void
   @AppStore.Mutation setLanguage!: (language: string) => void
+
+  api_base: string = "https://";
+  close_overlay: boolean = false;
 
   get locales() {
     return [
