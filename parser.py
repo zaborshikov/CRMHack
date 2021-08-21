@@ -33,12 +33,26 @@ def main():
     # idOfPersonComment = str(idOfPost['items'][0]['id'])
 
     postidlist = vk.wall.get(owner_id=analyze_id, count=100, offset=0) #получаем последний пост со стены
-    postid = str(postidlist['items'][1]['id']) #получаем id поста в виде цифры и записываем
-    response = vk.wall.getComments(owner_id=analyze_id, post_id=postid, count=100, sort='desc', offset=0) #Получаем последний комментарий в последнем посте со стены
-    textComment = response['items'][0]['text']
-    print(textComment)
-    print(a)
-        # print(postsGroup)\
+    n = 0
+    m = 0
+    while n < 101:
+        try:
+            postid = str(postidlist['items'][n]['id'])
+            print(postid)
+            response = vk.wall.getComments(owner_id=analyze_id, post_id=postid, count=100, sort='desc', offset=0) #Получаем последний комментарий в последнем посте со стены
+            while m < 101:
+                try:
+                    textComment = response['items'][m]['text']
+                    print(textComment)
+                    m += 1
+                except IndexError:
+                    break
+            print(postid)
+            n += 1
+        except IndexError:
+            break
+    # postid = str(postidlist['items'][1]['id']) #получаем id поста в виде цифры и записываем
+    # print(postsGroup)\
     # except IndexError:
     #     print('вы ненужное сообщество. живите с этим.')
 if __name__ == '__main__':
