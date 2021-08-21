@@ -20,13 +20,15 @@ def main():
     m = 0
     commentsEmoji = []
     posts = []
-    while n < 101:
+    while n < 5:
         m = 0
         try:
             postid = str(postidlist['items'][n]['id'])
             response = vk.wall.getComments(owner_id=analyze_id, post_id=postid, count=100, sort='desc', offset=0)
-            while m < 101:
+            while m < 5:
                 try:
+                    if 'text' not in response['items'][m]:
+                        break
                     textComment = response['items'][m]['text']
                     commentsEmoji.insert(m, textComment)
                     m += 1
@@ -38,22 +40,11 @@ def main():
             break
 
     
-    # comments = [word if word != "👍" else 'Класс!' for word in commentsEmoji]
-    # comments = [word if word != "🙃" else 'Прикольно' for word in commentsEmoji]
-    # comments = [word if word != "🤨" else 'Что?' for word in commentsEmoji]
-    # comments = [word if word != "👌" else 'Хорошо!' for word in commentsEmoji]
-    # comments = [word if word != "🤷" else 'Не знаю...' for word in commentsEmoji]
-    # comments = [word if word != "🤞" else 'Будем надеяться' for word in commentsEmoji]
-    # comments = [word if word != "🔥" else 'Супер!' for word in commentsEmoji]
-    print(commentsEmoji)
-    # print(comments)    
+
+    print(commentsEmoji)   
+    
     for i in commentsEmoji:
         print(ai.analyze([i]))
-    # print(ai.analyze(comments))
-    # return(comments, posts)
-    # return(comments, posts)
-
-
 
 if __name__ == '__main__':
     print(main())
