@@ -9,16 +9,37 @@ def main():
     vk_session = vk_api.VkApi(creds.login, creds.password, auth_handler=auth_handler)
     vk_session.auth()
     vk = vk_session.get_api()
-
     analyze_id = str(-190900168)
-    postidlist = vk.wall.get(owner_id=analyze_id, count=1, offset=0)
-    idOfPersonComment = str(postidlist['items'][0]['id'])
-    response = vk.wall.getComments(owner_id=analyze_id, post_id=idOfPersonComment, count=1, sort='desc', offset=0)
-    try:
-        textComment = response['items'][0]['text']
-        print(idOfPersonComment)
-        print(textComment)
-    except IndexError:
-        print('вы ненужное сообщество. живите с этим.')
+    # n = 0
+    # m = 0
+    # for i in postsGroup:
+    # while n < 10:
+    #     idOfPost = str(['items'][0]['id'])
+    #     while m < 10:
+    #         response = vk.wall.getComments(owner_id=analyze_id, post_id=idOfPost, count=m, sort='desc', offset=0)
+    #         try:
+    #             textComment = response['items'][m]['text']
+    #             print(textComment)
+    #             print(idOfPost)
+    #         except IndexError:
+    #             pass
+    #         m += 1
+    #     n += 1
+
+
+    # postidlist = vk.wall.get(owner_id=analyze_id, count=1, offset=0)
+    # idOfPost = str(postidlist['items'][0]['id'])
+    # response = vk.wall.getComments(owner_id=analyze_id, post_id=idOfPost, count=1, sort='desc', offset=0)
+    # idOfPersonComment = str(idOfPost['items'][0]['id'])
+
+    postidlist = vk.wall.get(owner_id=analyze_id, count=100, offset=0) #получаем последний пост со стены
+    postid = str(postidlist['items'][1]['id']) #получаем id поста в виде цифры и записываем
+    response = vk.wall.getComments(owner_id=analyze_id, post_id=postid, count=100, sort='desc', offset=0) #Получаем последний комментарий в последнем посте со стены
+    textComment = response['items'][0]['text']
+    print(textComment)
+    print(a)
+        # print(postsGroup)\
+    # except IndexError:
+    #     print('вы ненужное сообщество. живите с этим.')
 if __name__ == '__main__':
     main()
