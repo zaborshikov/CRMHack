@@ -14,8 +14,8 @@ def main():
     vk_session = vk_api.VkApi(creds.login, creds.password, auth_handler=auth_handler)
     vk_session.auth()
     vk = vk_session.get_api()
-    analyze_id = str(-190900168)
-    postidlist = vk.wall.get(owner_id=analyze_id, count=100, offset=0) 
+    vk_link = str(-190900168)
+    postidlist = vk.wall.get(owner_id=vk_link, count=100, offset=0) 
     n = 0
     m = 0
     commentsEmoji = []
@@ -24,7 +24,7 @@ def main():
         m = 0
         try:
             postid = str(postidlist['items'][n]['id'])
-            response = vk.wall.getComments(owner_id=analyze_id, post_id=postid, count=100, sort='desc', offset=0)
+            response = vk.wall.getComments(owner_id=vk_link, post_id=postid, count=100, sort='desc', offset=0)
             while m < 5:
                 try:
                     if 'text' not in response['items'][m]:
@@ -39,10 +39,6 @@ def main():
         except IndexError:
             break
 
-    
-
-    print(commentsEmoji)   
-    
     for i in commentsEmoji:
         print(ai.analyze([i]))
 
