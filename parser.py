@@ -15,26 +15,22 @@ def main():
     m = 0
     comments = []
     posts = []
-    while n < 5:
+    while n < 101:
         m = 0
         try:
             postid = str(postidlist['items'][n]['id'])
-            print(postid)
             response = vk.wall.getComments(owner_id=analyze_id, post_id=postid, count=100, sort='desc', offset=0)
-            while m < 10:
+            while m < 101:
                 try:
                     textComment = response['items'][m]['text']
-                    print(textComment)
                     comments.insert(m, textComment)
                     m += 1
                 except IndexError:
                     break
-            print(postid)
             posts.insert(n, postid)
             n += 1
         except IndexError:
             break
-    print(comments)
-    print(posts)
+    return(comments, posts)
 if __name__ == '__main__':
-    main()
+    print(main())
