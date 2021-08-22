@@ -1,9 +1,11 @@
 import creds
 import ai
+import db
 
 
 def main():
-    analyze_id = str(-190900168)
+    analyze_shrtnm = input()
+    analyze_id = db.Database.create(analyze_shrtnm)
     postidlist = creds.vk.wall.get(owner_id=analyze_id, count=100, offset=0) 
     n = 0
     m = 0
