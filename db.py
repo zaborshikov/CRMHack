@@ -35,7 +35,21 @@ class Database:
         except Exception:
             print(Exception)
         conn.commit()
-    def create(shortname):
+    def create(self, shortname):
         result = creds.vk.groups.getById(group_ids=shortname, group_id=shortname)
         id_company = str(result[0]['id'])
         return("-" + id_company)
+    def getIDs(self):
+        try:
+            cur.execute("SELECT * FROM companyid")
+            res = cur.fetchone()
+            return(res)
+        except Exception:
+            print(Exception)
+    def getMood(self):
+        try:
+            cur.execute("SELECT * FROM moods")
+            res = cur.fetchone()
+            return res
+        except Exception:
+            print(Exception)
