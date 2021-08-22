@@ -7,6 +7,7 @@ export default class AppStore extends VuexModule {
   language?: string = undefined
   dark = false
   group_id?: string = "";
+  group_name?: string = "Дэшборд";
   api_base = "https://abc.def"
 
   @Mutation
@@ -32,5 +33,10 @@ export default class AppStore extends VuexModule {
   @Mutation
   setGroupId(id: string) {
     this.group_id = id;
+  }
+
+  @Mutation
+  setGroupName(name: string) {
+    this.group_name = name;
   }
 }
