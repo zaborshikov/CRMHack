@@ -10,13 +10,22 @@ app.config['CORD_HEADERS'] = 'Content-Type'
 conn = sqlite3.connect('moods.db')
 cur = conn.cursor()
 
-@app.route("/stats", methods=['GET', 'POST'])
-def stats(id):
-    if request.method == 'GET':
-        hello = "aye"
-        return hello # ща сделаем
-    else:
-        pass
+@app.route("/stats", methods=['POST'])
+def stats():
+    id = request.get_json()['id']
+    cur.execute("SELECT * FROM moods where moodsid = {id}")
+    res = cur.fetchall()
+    pos = neg = net = ''
+    for i in res:
+        if 'None' not in i[1]:
+            pos += str(i[1]) + ' '
+        elif 'None' not in i[2]:
+            neg += str(i[2]) + ' '
+        else:
+            net += str(i[4]) + ' '
+    return 'POSITIVE: ' + pos + 'NEGATIVE: ' + neg + 'NEUTRAL: ' + net
+
+
 
 @app.route("/get_brands", methods=['GET'])
 def get_brands():
@@ -27,7 +36,7 @@ def get_brands():
     lol = ''
     for i in res:
         if str(-i[0]) not in lol:
-            lol += str(-i[0]) + " "
+            lol += Database.create2(-i[0]) + ' ' + str(-i[0]) + " "
     return lol
 
 
@@ -78,6 +87,10 @@ class Database:
         result = creds.vk.groups.getById(group_ids=shortname, group_id=shortname)
         id_company = str(result[0]['id'])
         return("-" + id_company)
+    def create2(shortname):
+        result = creds.vk.groups.getById(group_ids=shortname, group_id=shortname)
+        name_company = str(result[0]['name'])
+        return(name_company)
     def setPos(id, positive, message):
         print(message)
         cur.execute(f"insert into moods (positive, moodsid, comment) values ({positive}, {id}, '{message}')")
