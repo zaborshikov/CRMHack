@@ -17,6 +17,7 @@ import Vuetify, {
   VTextarea,
   VInput,
   VProgressCircular,
+  VSelect,
   VMain,
 } from 'vuetify/lib'
 import 'vuetify/dist/vuetify.min.css'
@@ -40,6 +41,7 @@ Vue.use(Vuetify, {
     VTextarea,
     VInput,
     VProgressCircular,
+    VSelect,
     VMain,
   },
 })
