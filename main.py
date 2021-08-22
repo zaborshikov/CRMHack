@@ -4,7 +4,7 @@ import db
 
 
 def main():
-    analyze_shrtnm = input()
+    analyze_shrtnm = input("id: ")
     analyze_id = db.Database.create(analyze_shrtnm)
     postidlist = creds.vk.wall.get(owner_id=analyze_id, count=100, offset=0) 
     n = 0
@@ -34,8 +34,8 @@ def main():
 
     print(commentsEmoji)   
     print(db.Database.getMood())
-    # for i in commentsEmoji:
-    #     print(ai.analyze([i], analyze_id))
+    for i in commentsEmoji:
+        print(ai.analyze([i], analyze_id))
 
 if __name__ == '__main__':
     main()
