@@ -7,6 +7,14 @@ app = Flask(__name__)
 @app.route("/create", methods=['GET', 'POST'])
 def create(shortname):
     if request.method == 'POST':
+        result = creds.vk.groups.getById(group_ids=shortname, group_id=shortname)
+        id_company = str(result[0]['id'])
+        return("-" + id_company)
+    else:
+        pass
+@app.route("/comment_analyse", methods=['GET', 'POST'])
+def comment_analyse(id):
+    if request.method == 'GET':
         try:
             sqlite_connection = sqlite3.connect('moods.db')
             cursor = sqlite_connection.cursor()
@@ -35,39 +43,9 @@ def create(shortname):
             return plu, minu, poh
     else:
         pass
-@app.route("/comment_analyse", methods=['GET', 'POST'])
-def comment_analyse(id):
-    if request.method == 'GET':
-        try:
-            sqlite_connection = sqlite3.connect('moods.db')
-            cursor = sqlite_connection.cursor()
-            print("Подключен к SQLite")
-
-            sqlite_select_query = """SELECT * from moods where moodsid = ?"""
-            cursor.execute(sqlite_select_query, (id))
-            print("Чтение одной строки \n")
-            record = cursor.fetchone()
-            print(record[0])
-            print(record[1])
-            print(record[2])
-            print(record[3])
-            print(record[4])
-
-            cursor.close()
-
-        except sqlite3.Error as error:
-            print("Ошибка при работе с SQLite", error)
-        finally:
-            if sqlite_connection:
-                sqlite_connection.close()
-                print("Соединение с SQLite закрыто")
-            return pos, neg, photos, posts
-    else:
-        pass
 
 conn = sqlite3.connect('moods.db')
 cur = conn.cursor()
-
 class Database:
     def create(shortname):
         result = creds.vk.groups.getById(group_ids=shortname, group_id=shortname)
