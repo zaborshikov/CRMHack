@@ -145,14 +145,14 @@ export default class Home extends Vue {
     })
     getImgFor(this.$store.state.AppStore.group_id, true).then(data => {
       console.log(data);
-      this.img_src2 = data;
+      this.img_src1 = data;
       this.img_loaded1 = true;
     });
-    getImgFor(this.$store.state.AppStore.group_id, false).then(data => {
-      console.log(data);
-      this.img_src2 = data;
-      this.img_loaded2 = true;
-    });
+    //- getImgFor(this.$store.state.AppStore.group_id, false).then(data => {
+    //-   console.log(data);
+    //-   this.img_src2 = data;
+    //-   this.img_loaded2 = true;
+    //- });
   }
 
   async delay(ms: number) {

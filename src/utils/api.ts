@@ -26,9 +26,8 @@ export async function getImgFor(id: string, positive: boolean) {
   // console.log(store.state.AppStore.api_base);
   return (
     await axios.post(
-      `${getApiBase()}/img`,
-      {"id": parseInt(id),
-       "positive": positive},
+      `${getApiBase()}/foto`,
+      {"id": parseInt(id)},
     )
   ).data
 }
