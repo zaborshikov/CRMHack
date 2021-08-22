@@ -8,11 +8,11 @@
       .v-container
         p.mt-12 Для того, чтобы открыть результаты анализа, введите ссылку на сообщество вконтакте
         v-layout(wrap v-on:keyup.enter="sendCompanyLink()").mt-12
-          v-text-field(label="Ссылка", :color="color", placeholder="vk.com/...", v-model="link", :loading="loading")
+          v-layout
+            p.mt-2(style="display: flex; align-items: center;") vk.com/
+            v-text-field(label="Ссылка", :color="color", placeholder="fmproducts", v-model="link", :loading="loading")
           v-btn(large outlined width="100" @click="sendCompanyLink()" :loading="loading" :error="btn_icon === 'mdi-close'")
             v-icon(:color="color") {{ btn_icon }}
-        p {{ link }}
-        p {{ $store.state.api_base }}
     v-flex(xs1, md2)
 
 </template>
@@ -33,11 +33,12 @@ export default class Home extends Vue {
   @AppStore.Mutation setUser!: (user: User) => void
   @SnackbarStore.Mutation setSnackbarError!: (error: string) => void
   @SnackbarStore.Mutation setGroupId!: (id: string) => void
+  @SnackbarStore.Mutation setGroupName!: (id: string) => void
 
   link: string = "";
   loading: boolean = false;
   btn_icon: string = "mdi-arrow-right";
-  color: string = "black";
+  color: string = "none";
 
   async sendCompanyLink() {
     this.loading = true;
@@ -46,6 +47,7 @@ export default class Home extends Vue {
       this.color = "green";
       this.btn_icon = "mdi-done";
       this.setGroupId(data.id);
+      this.setGroupName(this.link);
     })
     .catch(e => {
       console.log(e);
@@ -54,7 +56,7 @@ export default class Home extends Vue {
       this.color = "red";
       this.delay(2000).then(() => {
         this.btn_icon = "mdi-arrow-right";
-        this.color = "black";
+        this.color = "none";
       })
     })
   }
