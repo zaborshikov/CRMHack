@@ -34,8 +34,8 @@ def main():
 
     print(commentsEmoji)   
     print(db.Database.getMood())
-    for i in commentsEmoji:
-        print(ai.analyze([i], analyze_id))
+    # for i in commentsEmoji:
+    #     print(ai.analyze([i], analyze_id))
 
 if __name__ == '__main__':
     main()

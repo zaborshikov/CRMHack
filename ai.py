@@ -12,17 +12,23 @@ def analyze(messages, id):
 
     for message, sentiment in zip(messages, results):
         sentiments.append(sentiment)
-    try:
-        pos = sentiments[0]['positive']
-        db.Database.setPos(id, pos)
-    except Exception as e:
-        print(e)
-        pos = 0
-        db.Database.setPos(id, pos)
-    try:
+    # try:
+    if 'negative' not in sentiments[0]:
+        if 'positive' in sentiments[0]:
+            pos = sentiments[0]['positive']
+            db.Database.setPos(id, pos)
+            # except Exception as e:
+            #     print(e)
+            #     pos = 0
+            #     db.Database.setPos(id, pos)
+            # try:
+    else:
         neg = sentiments[0]['negative']
         db.Database.setNeg(id, neg)
-    except Exception as e:
-        print(e)
-        neg = 0
-        db.Database.setNeg(id, neg)
+        # except Exception as e:
+        #     print(e)
+        #     neg = 0
+        #     db.Database.setNeg(id, neg)
+    return sentiments
+if __name__ == "__main__":
+    analyze(['вау'], -182637)
