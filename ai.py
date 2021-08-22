@@ -1,7 +1,7 @@
 from dostoevsky.tokenization import RegexTokenizer
 from dostoevsky.models import FastTextSocialNetworkModel
-import dotn
-def analyze(messages):
+import db
+def analyze(messages, id):
     tokenizer = RegexTokenizer()
 
     sentiments = []
@@ -14,15 +14,15 @@ def analyze(messages):
         sentiments.append(sentiment)
     try:
         pos = sentiments[0]['positive']
-        self.db.setPos(nnID, pos)
+        db.Database.setPos(id, pos)
     except Exception as e:
-        print(e, 22)
+        print(e)
         pos = 0
-        self.db.setPos(nnID, pos)
+        db.Database.setPos(id, pos)
     try:
         neg = sentiments[0]['negative']
-        self.db.setNegative(nnID, neg)
+        db.Database.setNeg(id, neg)
     except Exception as e:
-        print(e, 29)
+        print(e)
         neg = 0
-        self.db.setNegative(nnID, neg)
+        db.Database.setNeg(id, neg)

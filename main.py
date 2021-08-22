@@ -35,7 +35,7 @@ def main():
     print(commentsEmoji)   
     
     for i in commentsEmoji:
-        print(ai.analyze([i]))
+        print(ai.analyze([i], analyze_id))
 
 if __name__ == '__main__':
     print(main())
