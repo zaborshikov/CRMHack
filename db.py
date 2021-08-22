@@ -1,5 +1,4 @@
 import sqlite3
-import datetime
 import creds
 
 # def create(shortname):
@@ -23,27 +22,31 @@ cur = conn.cursor()
     #     return(ids, brands)
     #     #возврат айди и названия брендов
 class Database:
-    def setPos(id, positive):
+    def setPos(self, id, positive):
         cur.execute(f"UPDATE moods SET positive = {positive} where id = {id}")
         # except Exception:
         #     print(Exception)
         conn.commit()
-    def setNeg(id, negative):
+        
+    def setNeg(self, id, negative):
         cur.execute(f"UPDATE moods SET negative = {negative} where id = {id}")
         # except Exception:
         #     print(Exception)
         conn.commit()
-    def create(shortname):
+
+    def create(self, shortname):
         result = creds.vk.groups.getById(group_ids=shortname, group_id=shortname)
         id_company = str(result[0]['id'])
         return("-" + id_company)
-    def getIDs():
+
+    def getIDs(self):
         cur.execute("SELECT * FROM companyid")
         res = cur.fetchone()
         return(res)
         # except Exception:
         #     print(Exception)
-    def getMood():
+
+    def getMood(self):
         cur.execute("SELECT * FROM moods")
         res = cur.fetchone()
         return res
