@@ -9,7 +9,7 @@ from sklearn.metrics import adjusted_rand_score
 import get_wordcloud
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, support_credentials=True)
 app.config['CORD_HEADERS'] = 'Content-Type'
 conn = sqlite3.connect('moods.db')
 cur = conn.cursor()
