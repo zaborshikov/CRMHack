@@ -15,14 +15,8 @@ def analyze(messages, id):
     # try:
     if 'negative' not in sentiments[0]:
         if 'positive' in sentiments[0]:
-            # print(sentiments)
             pos = sentiments[0]['positive']
             db.Database.setPos(id, pos, messages)
-            # except Exception as e:
-            #     print(e)
-            #     pos = 0
-            #     db.Database.setPos(id, pos)
-            # try:
         else:
             if 'speech' in sentiments[0]:
                 neutral = sentiments[0]['speech']
@@ -32,10 +26,4 @@ def analyze(messages, id):
     else:
         neg = sentiments[0]['negative']
         db.Database.setNeg(id, neg, messages)
-        # except Exception as e:
-        #     print(e)
-        #     neg = 0
-        #     db.Database.setNeg(id, neg)
     return sentiments
-if __name__ == "__main__":
-    analyze(['вау'], -182637)

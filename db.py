@@ -64,26 +64,10 @@ def comment_analyse(id):
             return pos, neg, photos, posts
     else:
         pass
-# def create(shortname):
-#     result = creds.vk.groups.getById(group_ids=shortname, group_id=shortname)
-#     id_company = str(result[0]['id'])
-#     return("-" + id_company)
 
 conn = sqlite3.connect('moods.db')
 cur = conn.cursor()
-# cur.execute("""CREATE TABLE IF NOT EXISTS moods(
-#     moodsid INT PRIMARY KEY,
-#     positive TEXT,
-#     negative TEXT);""")
-    # def stats(id_company):
-    #     return(object_array)
-    #     #статистика компании
-    # def comments_analyze(id_company):
-    #     return(plus_array, minus_array, photos)
-    #     #возвращаем хорошие и плохие комменты, плюс фотки к постам
-    # def get_brands(self):
-    #     return(ids, brands)
-    #     #возврат айди и названия брендов
+
 class Database:
     def create(shortname):
         result = creds.vk.groups.getById(group_ids=shortname, group_id=shortname)
@@ -92,14 +76,10 @@ class Database:
     def setPos(id, positive, message):
         print(message)
         cur.execute(f"insert into moods (positive, moodsid, comment) values ({positive}, {id}, '{message}')")
-        # except Exception:
-        #     print(Exception)
         conn.commit()
 
     def setNeg(id, negative, message):
         cur.execute(f"insert into moods (negative, moodsid, comment) values ({negative}, {id}, '{message}')")
-        # except Exception:
-        #     print(Exception)
         conn.commit()
     def setNeutral(id, neutral, message):
         cur.execute(f"insert into moods (neutral, moodsid, comment) values ({neutral}, {id}, '{message}')")
@@ -108,15 +88,11 @@ class Database:
         cur.execute("SELECT * FROM companyid")
         res = cur.fetchone()
         return(res)
-        # except Exception:
-        #     print(Exception)
 
     def getMood():
         cur.execute("SELECT * FROM moods")
         res = cur.fetchone()
         return res
-        # except Exception:
-        #     print(Exception)
     def comment_analyse(id):
         try:
             sqlite_connection = sqlite3.connect('moods.db')
