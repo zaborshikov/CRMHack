@@ -12,6 +12,27 @@ export async function create(link: string) {
   ).data
 }
 
+export async function stats(id: string) {
+  // console.log(store.state.AppStore.api_base);
+  return (
+    await axios.post(
+      `${getApiBase()}/stats`,
+      {"id": parseInt(id)},
+    )
+  ).data
+}
+
+export async function getImgFor(id: string, positive: boolean) {
+  // console.log(store.state.AppStore.api_base);
+  return (
+    await axios.post(
+      `${getApiBase()}/img`,
+      {"id": parseInt(id),
+       "positive": positive},
+    )
+  ).data
+}
+
 function getApiBase() {
   return (store as any).state.AppStore.api_base;
 }

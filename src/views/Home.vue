@@ -24,6 +24,7 @@ import Component from 'vue-class-component'
 import { i18n } from '@/plugins/i18n'
 import { namespace } from 'vuex-class'
 import { User } from '@/models/User'
+import router from '@/plugins/router'
 
 const AppStore = namespace('AppStore')
 const SnackbarStore = namespace('SnackbarStore')
@@ -32,8 +33,8 @@ const SnackbarStore = namespace('SnackbarStore')
 export default class Home extends Vue {
   @AppStore.Mutation setUser!: (user: User) => void
   @SnackbarStore.Mutation setSnackbarError!: (error: string) => void
-  @SnackbarStore.Mutation setGroupId!: (id: string) => void
-  @SnackbarStore.Mutation setGroupName!: (id: string) => void
+  @AppStore.Mutation setGroupId!: (id: string) => void
+  @AppStore.Mutation setGroupName!: (id: string) => void
 
   link: string = "";
   loading: boolean = false;
@@ -46,8 +47,10 @@ export default class Home extends Vue {
       this.loading = false;
       this.color = "green";
       this.btn_icon = "mdi-done";
-      this.setGroupId(data.id);
+      console.log(data);
+      this.setGroupId(data);
       this.setGroupName(this.link);
+      this.$router.push("/dashboard");
     })
     .catch(e => {
       console.log(e);

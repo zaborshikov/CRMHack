@@ -12,12 +12,30 @@
           span#overall_metric() {{ overall_metric }}
       v-layout(wrap, v-if='typeof $store.state.AppStore.group_id !== "undefined"')
         LineChart(:chartdata='chartData', :options='chartOptions', style="width: 100%; height: auto")
-        v-layout.mt-12(style="display: flex; flex-wrap: wrap;")
+        v-layout(wrap)
+          v-spacer
+          v-btn-toggle(v-model="toggle_multiple", dense, color="#8C52FF")
+            v-btn 1Д
+            v-btn 7Д
+            v-btn 1М
+            v-btn 3М
+            v-btn 1Г
+        v-layout.mt-12(style="display: flex; flex-wrap: wrap; width: 100%")
           p.mr-4.selector_text Показать
-          v-select(v-model="type_selector" :items="type_items" item-text="text" item-value="value" return-object)
+          v-select(v-model="type_selector" :items="type_items" item-text="text" item-value="value" return-object color="#8C52FF" item-color="#8C52FF")
           p.ml-4.mr-4.selector_text за
-          v-select(v-model="date_selector" :items="date_items" item-text="text" item-value="value" return-object)
-        
+          v-select(v-model="date_selector" :items="date_items" item-text="text" item-value="value" return-object color="#8C52FF" item-color="#8C52FF")
+        v-layout(wrap)
+          v-layout(v-if="type_selector.type == 0" wrap)
+            span 0
+            LineChart(:chartdata='chartData2', :options='chartOptions', style="width: 100%; height: auto")
+          v-layout(v-if="type_selector.type == 1")
+            v-img(v-if="img_loaded1" :src="img_src1")
+          v-layout(v-if="type_selector.type == 2")
+            v-img(v-if="img_loaded2" :src="img_src2")
+            span 2
+          v-layout(v-if="type_selector.type == 3")
+            span 3
       v-layout(v-else) 
         span Что-то пошло не так. Попробуйте начать сначала.
     v-flex(xs0, sm1, md1, lg1, xl2)
@@ -25,7 +43,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { create } from '@/utils/api'
+import { stats, getImgFor } from '@/utils/api'
 import Component from 'vue-class-component'
 import { i18n } from '@/plugins/i18n'
 import { namespace } from 'vuex-class'
@@ -42,7 +60,13 @@ export default class Home extends Vue {
 
   gradient:any = null;
   gradient2:any = null;
-  overall_metric:Number = 4.98; 
+  overall_metric:Number = 4.38; 
+  toggle_multiple= 1;
+
+  img_loaded1 = false;
+  img_loaded2 = false;
+  img_src1 = "";
+  img_src2 = "";
 
   type_selector = {text: "анализ облика компании", type: 0}
   type_items = [
@@ -66,7 +90,31 @@ export default class Home extends Vue {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
     datasets: [
       {
-        label: 'Data One',
+        label: 'Общая метрика привлекательности',
+        borderColor: '#8C52FF',
+        pointBackgroundColor: 'white',
+        borderWidth: 1,
+        pointBorderColor: 'white',
+        backgroundColor: null,
+        data: [40, 39, 10, 40, 39, 80, 40],
+      }
+    ],
+  }
+
+  chartData2 = {
+    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    datasets: [
+      {
+        label: 'Позитивные комментарии',
+        borderColor: '#FF52AA',
+        pointBackgroundColor: 'white',
+        borderWidth: 1,
+        pointBorderColor: 'white',
+        backgroundColor: null,
+        data: [10, 20, 35, 30, 47, 44, 55],
+      },
+      {
+        label: 'Негативные комментарии',
         borderColor: '#8C52FF',
         pointBackgroundColor: 'white',
         borderWidth: 1,
@@ -75,19 +123,36 @@ export default class Home extends Vue {
         data: [40, 39, 10, 40, 39, 80, 40],
       },
       {
-        label: 'Data Two',
-        borderColor: '#A0FFF1',
+        label: 'Нейтральные комментарии',
+        borderColor: '#333',
         pointBackgroundColor: 'white',
-        pointBorderColor: 'white',
         borderWidth: 1,
+        pointBorderColor: 'white',
         backgroundColor: null,
-        data: [60, 55, 32, 10, 2, 12, 53],
-      },
+        data: [10, 20, 10, 25, 19, 30, 20],
+      }
     ],
   }
+
   chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
+  }
+
+  mounted() {
+    stats(this.$store.state.AppStore.group_id).then(data => {
+      console.log(data);
+    })
+    getImgFor(this.$store.state.AppStore.group_id, true).then(data => {
+      console.log(data);
+      this.img_src2 = data;
+      this.img_loaded1 = true;
+    });
+    getImgFor(this.$store.state.AppStore.group_id, false).then(data => {
+      console.log(data);
+      this.img_src2 = data;
+      this.img_loaded2 = true;
+    });
   }
 
   async delay(ms: number) {
@@ -131,6 +196,7 @@ export default class Home extends Vue {
   font-weight: 800;
   font-size: 1.3rem;
   margin: 0 0 0 0!important;
+  color: "#8C52FF"!important;
 }
 
 .v-select__selections > input {
