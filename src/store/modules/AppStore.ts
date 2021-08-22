@@ -8,6 +8,7 @@ export default class AppStore extends VuexModule {
   dark = false
   group_id?: string = "";
   group_name?: string = "Дэшборд";
+  group_type?: string = "B2C";
   api_base = "https://abc.def"
 
   @Mutation

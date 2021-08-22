@@ -10,7 +10,7 @@ nav
     v-btn(text, icon, color='grey', @click='toggleMode')
       v-icon(small) brightness_2
     // Language picker
-    v-menu(offset-y)
+    //v-menu(offset-y)
       template(v-slot:activator='{ on }')
         v-btn(text, icon, color='grey', v-on='on') {{ currentLocale.icon }}
       v-list

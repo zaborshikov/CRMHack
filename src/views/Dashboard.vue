@@ -5,9 +5,10 @@
     v-flex(xs0, sm1, md1, lg1, xl2)
     v-flex(xs12, sm10, md10, lg10, xl8)
       v-layout(wrap).pt-4
-        span._headline {{ $store.state.AppStore.group_name }}
+        span._headline {{ $store.state.AppStore.group_name }}, 
+          span(style="color: #777") {{ $store.state.AppStore.group_type }}
         v-spacer
-        v-progress-circular(:value="80" rotate=128 size="84" width=10 color="#8C52FF")
+        v-progress-circular.mt-n4(:value="80" rotate=128 size="84" width=10 color="#8C52FF")
           span#overall_metric() {{ overall_metric }}
       v-layout(v-if='typeof $store.state.AppStore.group_id !== "undefined"')
         LineChart(:chartdata='chartData', :options='chartOptions', style="width: 100%; height: auto")
@@ -82,12 +83,15 @@ export default class Home extends Vue {
 
 #overall_metric {
   font-family: 'Inter';
-  font-weight: 700;
+  font-weight: 800;
   font-size: 20px;
 }
 
-#app.theme--dark > div > main > div > div > div > div.flex.xs12.sm10.md10.lg8 > div.layout.pt-4.wrap > div.v-progress-circular > div {
-  color: white;
+#app.theme--dark > div > main > div > div > div > div.flex > div.layout.pt-4.wrap > div.v-progress-circular > div > #overall_metric{ 
+  color: white!important;
+}
+#app.theme--light > div > main > div > div > div > div.flex > div.layout.pt-4.wrap > div.v-progress-circular > div {
+  color: black;
 }
 </style>
 

@@ -1,6 +1,6 @@
 export const messages = {
   ru: {
-    title: 'Темплейт фронтенда',
+    title: 'Анализ облика компании | FMProducts',
     notFound: 'Страница не найдена',
   },
   en: {
