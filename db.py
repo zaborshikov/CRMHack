@@ -1,4 +1,6 @@
 import sqlite3
+
+from werkzeug.datastructures import Accept
 import creds
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 import json
@@ -8,16 +10,36 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import adjusted_rand_score
 import get_wordcloud
 
+white = ['http://74bf-85-30-217-217.ngrok.io', 'http://localhost:5000']
+
 app = Flask(__name__)
-CORS(app, support_credentials=True)
-app.config['CORD_HEADERS'] = 'Content-Type'
-conn = sqlite3.connect('moods.db')
-cur = conn.cursor()
+CORS(app) #, support_credentials=True)
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
+# app.config['CORD_HEADERS'] = 'Content-Type'
+# conn = sqlite3.connect('moods.db')
+# cur = conn.cursor()
+
+
+
+# @app.after_request
+# def add_cors_headers(response):
+#     r = request.referrer[:-1]
+#     if r in white:
+#         response.headers.add('Accept-Control-Allow-Origin', r)
+#         response.headers.add('Accept-Control-Allow-Credentials', 'True')
+#         response.headers.add('Accept-Control-Allow-Headers', 'Content-Type')
+#         response.headers.add('Accept-Control-Allow-Headers', 'Cache-Control')
+#         response.headers.add('Accept-Control-Allow-Headers', 'X-Requested')
+#         response.headers.add('Accept-Control-Allow-Headers', 'Authorization')
+#         response.headers.add('Accept-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE')
+#     return response
 
 @app.route("/foto", methods=['POST'])
 def foto():
     id = int(request.get_json()['id'])
     sqlite_select_query = """SELECT * from moods where moodsid = ?"""
+    conn = sqlite3.connect('moods.db', check_same_thread=False)
+    cur = conn.cursor()
     cur.execute(sqlite_select_query, (id, ))
     res = cur.fetchall()
     tex = ''
@@ -32,27 +54,51 @@ def foto():
     return lin
 
 
-@app.route("/stats", methods=['POST'])
+@app.route("/stats", methods=['GET', 'POST'])
 def stats():
-    id = int(request.get_json()['id'])
-    sqlite_select_query = """SELECT * from moods where moodsid = ?"""
-    cur.execute(sqlite_select_query, (id, ))
+    id = int(request.args.get('id'))
+    conn = sqlite3.connect('moods.db', check_same_thread=False)
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM moods")
     res = cur.fetchall()
-    pos = neg = net = ''
+    b = []
+    a = []
+    g = -1
     for i in res:
-        if 'None' not in i[1]:
-            pos += str(i[1]) + ' '
-        elif 'None' not in i[2]:
-            neg += str(i[2]) + ' '
+        if -i[0] in b:
+            print(i)
+            a[g].append([i[1], i[2], i[3], i[4]])
         else:
-            net += str(i[4]) + ' '
-    return 'POSITIVE: ' + pos + 'NEGATIVE: ' + neg + 'NEUTRAL: ' + net
+            print(i)
+            b.append(-i[0])
+            a.append([[i[1], i[2], i[3], i[4]]])
+            g+=1
+    mol = {b[i]: a[i] for i in range(g+1)}
+    print(mol[id])
+    res = mol[id]
+    pos = neg = net = ''
+    result = {
+        "pos": [],
+        "neg": [],
+        "net": []
+    }
+    for i in res:
+        if '0' != i[0]:
+            pos += str(i[0]) + ' '
+            result["pos"].append(str(i[0]))
+        elif '0' != i[1]:
+            neg += str(i[1]) + ' '
+            result["neg"].append(str(i[1]))
+        else:
+            net += str(i[3]) + ' '
+            result["net"].append(str(i[3]))
+    return jsonify(result)
 
 
 
 @app.route("/get_brands", methods=['GET'])
 def get_brands():
-    conn = sqlite3.connect('moods.db')
+    conn = sqlite3.connect('moods.db', check_same_thread=False)
     cur = conn.cursor()
     cur.execute("SELECT * FROM moods")
     res = cur.fetchall()
