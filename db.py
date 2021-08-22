@@ -1,19 +1,47 @@
 import sqlite3
 import creds
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
+import json
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+app.config['CORD_HEADERS'] = 'Content-Type'
+conn = sqlite3.connect('moods.db')
+cur = conn.cursor()
 
-@app.route("/create", methods=['GET', 'POST'])
-def create(shortname):
-    if request.method == 'POST':
-        result = creds.vk.groups.getById(group_ids=shortname, group_id=shortname)
-        id_company = str(result[0]['id'])
-        return("-" + id_company)
+@app.route("/stats", methods=['GET', 'POST'])
+def stats(id):
+    if request.method == 'GET':
+        hello = "aye"
+        return hello # ща сделаем
     else:
         pass
-@app.route("/comment_analyse", methods=['GET', 'POST'])
+
+@app.route("/get_brands", methods=['GET'])
+def get_brands():
+    conn = sqlite3.connect('moods.db')
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM moods")
+    res = cur.fetchall()
+    lol = ''
+    for i in res:
+        if str(-i[0]) not in lol:
+            lol += str(-i[0]) + " "
+    return lol
+
+
+@app.route("/create", methods=['POST'])
+def create():
+    shortname = request.get_json()['vk_link']
+    result = creds.vk.groups.getById(group_ids=shortname, group_id=shortname)
+    id_company = str(result[0]['id'])
+    return str(id_company)
+
+
+@app.route("/comment_analyse", methods=['GET'])
 def comment_analyse(id):
+    id = request.get_json()['id']
     if request.method == 'GET':
         try:
             sqlite_connection = sqlite3.connect('moods.db')
@@ -24,14 +52,14 @@ def comment_analyse(id):
             cursor.execute(sqlite_select_query, (id, ))
             print("Чтение одной строки \n")
             records = cursor.fetchmany(all)
-            plu = minu = poh = []
+            plu = minu = poh = ""
             for i in records:
                 if 'None' not in i[1]:
-                    plu.append(i[3])
+                    plu += str(i[3]) + ' '
                 elif 'None' not in i[2]:
-                    minu.append(i[3])
+                    minu += str(i[3]) + ' '
                 else:
-                    poh.append(i[3])
+                    poh += str(i[3]) + ' '
             cursor.close()
 
         except sqlite3.Error as error:
@@ -40,12 +68,11 @@ def comment_analyse(id):
             if sqlite_connection:
                 sqlite_connection.close()
                 print("Соединение с SQLite закрыто")
-            return plu, minu, poh
+            return '[' + plu + '], [' + minu + '], [' + poh + ']'
     else:
         pass
 
-conn = sqlite3.connect('moods.db')
-cur = conn.cursor()
+
 class Database:
     def create(shortname):
         result = creds.vk.groups.getById(group_ids=shortname, group_id=shortname)
@@ -61,6 +88,7 @@ class Database:
         conn.commit()
     def setNeutral(id, neutral, message):
         cur.execute(f"insert into moods (neutral, moodsid, comment) values ({neutral}, {id}, '{message}')")
+        conn.commit()
 
     def getIDs():
         cur.execute("SELECT * FROM companyid")
@@ -80,7 +108,7 @@ class Database:
             sqlite_select_query = """SELECT * from moods where moodsid = ?"""
             cursor.execute(sqlite_select_query, (id, ))
             print("Чтение одной строки \n")
-            records = cursor.fetchmany(all)
+            records = cursor.fetchmany()
             plu = minu = poh = []
             for i in records:
                 if 'None' not in i[1]:
@@ -98,3 +126,14 @@ class Database:
                 sqlite_connection.close()
                 print("Соединение с SQLite закрыто")
             return plu, minu, poh
+    def get_brands():
+        cur.execute("""SELECT * from moods""")
+        res = cur.fetchall()
+        lol = []
+        for i in res:
+            if -i[0] not in lol:
+                lol.append(-i[0])
+        return lol
+
+# print(Database.get_brands())
+app.run(debug=True)
