@@ -1,3 +1,4 @@
 creds.py
 vk_config.v2.json
 .gitignore
+moods.db
