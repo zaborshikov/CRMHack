@@ -7,9 +7,32 @@ app = Flask(__name__)
 @app.route("/create", methods=['GET', 'POST'])
 def create(shortname):
     if request.method == 'POST':
-        result = creds.vk.groups.getById(group_ids=shortname, group_id=shortname)
-        id_company = str(result[0]['id'])
-        return("-" + id_company)
+        try:
+            sqlite_connection = sqlite3.connect('moods.db')
+            cursor = sqlite_connection.cursor()
+            print("Подключен к SQLite")
+
+            sqlite_select_query = """SELECT * from moods where moodsid = ?"""
+            cursor.execute(sqlite_select_query, (id, ))
+            print("Чтение одной строки \n")
+            records = cursor.fetchmany(all)
+            plu = minu = poh = []
+            for i in records:
+                if 'None' not in i[1]:
+                    plu.append(i[3])
+                elif 'None' not in i[2]:
+                    minu.append(i[3])
+                else:
+                    poh.append(i[3])
+            cursor.close()
+
+        except sqlite3.Error as error:
+            print("Ошибка при работе с SQLite", error)
+        finally:
+            if sqlite_connection:
+                sqlite_connection.close()
+                print("Соединение с SQLite закрыто")
+            return plu, minu, poh
     else:
         pass
 @app.route("/comment_analyse", methods=['GET', 'POST'])
@@ -121,4 +144,3 @@ class Database:
                 sqlite_connection.close()
                 print("Соединение с SQLite закрыто")
             return plu, minu, poh
-Database.comment_analyse(-190900168)
