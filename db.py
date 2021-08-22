@@ -3,6 +3,10 @@ import creds
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 import json
 from flask_cors import CORS
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.cluster import KMeans
+from sklearn.metrics import adjusted_rand_score
+import get_wordcloud
 
 app = Flask(__name__)
 CORS(app)
@@ -10,10 +14,29 @@ app.config['CORD_HEADERS'] = 'Content-Type'
 conn = sqlite3.connect('moods.db')
 cur = conn.cursor()
 
+@app.route("/foto", methods=['POST'])
+def foto():
+    id = int(request.get_json()['id'])
+    sqlite_select_query = """SELECT * from moods where moodsid = ?"""
+    cur.execute(sqlite_select_query, (id, ))
+    res = cur.fetchall()
+    tex = ''
+    for i in res:
+        tex += str(i[3]) + " "
+    get_wordcloud.get_word_cloud(tex)
+    lin = ''
+    with open('words.png') as f:
+        lines = f.readlines
+        for i in lines:
+            lin += i + '\n'
+    return lin
+
+
 @app.route("/stats", methods=['POST'])
 def stats():
-    id = request.get_json()['id']
-    cur.execute("SELECT * FROM moods where moodsid = {id}")
+    id = int(request.get_json()['id'])
+    sqlite_select_query = """SELECT * from moods where moodsid = ?"""
+    cur.execute(sqlite_select_query, (id, ))
     res = cur.fetchall()
     pos = neg = net = ''
     for i in res:
